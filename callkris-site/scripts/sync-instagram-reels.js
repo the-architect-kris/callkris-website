@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 /**
- * Refresh assets/data/instagram-reels.json from @kriskereluk.
- * Run locally before deploy: node scripts/sync-instagram-reels.js
+ * Refresh assets/data/instagram-reels.json from @kriskereluk and download
+ * thumbnail images locally (Instagram CDN blocks hotlinking on other sites).
  *
- * Instagram blocks datacenter IPs (including Vercel), so reels are synced
- * into the repo rather than fetched live in production.
+ * Run before deploy: node scripts/sync-instagram-reels.js
  */
 
 const fs = require("fs");
@@ -14,13 +13,39 @@ const IG_APP_ID = "936619743392459";
 const USERNAME = process.env.INSTAGRAM_USERNAME || "kriskereluk";
 const MAX_REELS = 8;
 const OUT_FILE = path.join(__dirname, "../assets/data/instagram-reels.json");
+const THUMB_DIR = path.join(__dirname, "../assets/data/instagram/thumbs");
 
 function reelCaption(node) {
   const edges = node.edge_media_to_caption?.edges || [];
   return edges[0]?.node?.text || "";
 }
 
+async function downloadThumbnail(url, shortcode) {
+  const response = await fetch(url, {
+    headers: {
+      Referer: "https://www.instagram.com/",
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Thumbnail download failed for " + shortcode);
+  }
+
+  const contentType = response.headers.get("content-type") || "image/jpeg";
+  const ext = contentType.includes("png") ? "png" : "jpg";
+  const filename = shortcode + "." + ext;
+  const filePath = path.join(THUMB_DIR, filename);
+  const buffer = Buffer.from(await response.arrayBuffer());
+
+  fs.writeFileSync(filePath, buffer);
+  return "/assets/data/instagram/thumbs/" + filename;
+}
+
 async function main() {
+  fs.mkdirSync(THUMB_DIR, { recursive: true });
+
   const response = await fetch(
     "https://www.instagram.com/api/v1/users/web_profile_info/?username=" +
       encodeURIComponent(USERNAME),
@@ -51,21 +76,38 @@ async function main() {
     process.exit(1);
   }
 
-  const reels = (payload.data.user.edge_owner_to_timeline_media?.edges || [])
+  const nodes = (payload.data.user.edge_owner_to_timeline_media?.edges || [])
     .map(function (edge) {
       return edge.node;
     })
     .filter(function (node) {
       return node.is_video && node.product_type === "clips";
     })
-    .slice(0, MAX_REELS)
-    .map(function (node) {
-      return {
-        permalink: "https://www.instagram.com/reel/" + node.shortcode + "/",
-        thumbnail_url: node.display_url || node.thumbnail_src || null,
-        caption: reelCaption(node).slice(0, 200),
-      };
+    .slice(0, MAX_REELS);
+
+  const reels = [];
+
+  for (const node of nodes) {
+    const shortcode = node.shortcode;
+    const remoteThumb = node.display_url || node.thumbnail_src;
+
+    let thumbnail = null;
+    if (remoteThumb) {
+      try {
+        thumbnail = await downloadThumbnail(remoteThumb, shortcode);
+        console.log("Saved thumbnail:", thumbnail);
+      } catch (error) {
+        console.warn(error.message);
+      }
+    }
+
+    reels.push({
+      shortcode,
+      permalink: "https://www.instagram.com/reel/" + shortcode + "/",
+      thumbnail,
+      caption: reelCaption(node).slice(0, 200),
     });
+  }
 
   const output = {
     username: USERNAME,

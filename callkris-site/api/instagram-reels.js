@@ -161,7 +161,7 @@ function readStaticReels(config) {
       }
       return {
         permalink: entry.permalink,
-        thumbnail_url: entry.thumbnail_url || null,
+        thumbnail_url: entry.thumbnail || entry.thumbnail_url || null,
         caption: entry.caption || "",
       };
     });
