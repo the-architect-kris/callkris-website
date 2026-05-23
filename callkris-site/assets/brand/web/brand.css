@@ -1,0 +1,45 @@
+/* Kris Kereluk — text wordmark (standalone for search.callkris.ca or other properties)
+   Load fonts: Inter 400-700, Playfair Display 600-700 from Google Fonts */
+
+:root {
+  --brand-ink:    #092352;
+  --brand-accent: #e37b48;
+  --brand-serif:  "Playfair Display", Georgia, "Times New Roman", serif;
+  --brand-sans:   "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.wordmark {
+  display: inline-block;
+  font-family: var(--brand-serif);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.wordmark:hover { text-decoration: none; }
+.wordmark > span {
+  display: block;
+  font-family: var(--brand-sans);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+}
+.wordmark--light {
+  font-size: 1.25rem;
+  color: var(--brand-ink);
+}
+.wordmark--light > span {
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  margin-top: 3px;
+}
+.wordmark--dark {
+  font-size: 1.7rem;
+  color: #fff;
+}
+.wordmark--dark:hover { color: #fff; }
+.wordmark--dark > span {
+  font-size: 0.66rem;
+  letter-spacing: 0.17em;
+  margin-top: 5px;
+}
