@@ -4,22 +4,22 @@
    ========================================================================== */
 
 :root {
-  --ink:        #1c2433;   /* deep navy-charcoal — dark sections, headings */
-  --ink-2:      #2a3346;
+  --ink:        #092352;   /* callkris.ca navy — dark sections, headings */
+  --ink-2:      #0a2f6e;
   --bg:         #ffffff;
-  --cream:      #f6f2ea;   /* warm section background */
-  --sand:       #ece3d4;
-  --accent:     #b18a4e;   /* warm bronze/gold */
-  --accent-dk:  #97713a;
-  --text:       #333a48;   /* body text */
-  --muted:      #6c7382;   /* secondary text */
-  --line:       #e7e2d8;   /* hairline borders */
-  --line-dk:    #34405a;   /* borders on dark bg */
+  --cream:      #f2f2f2;   /* callkris.ca light section background */
+  --sand:       #dce4ef;
+  --accent:     #e37b48;   /* callkris.ca coral orange */
+  --accent-dk:  #c86532;
+  --text:       #171616;   /* body text */
+  --muted:      #54595f;   /* secondary text */
+  --line:       #e5e3df;   /* hairline borders */
+  --line-dk:    #1a3a6e;   /* borders on dark bg */
   --radius:     8px;
   --radius-lg:  16px;
   --maxw:       1180px;
-  --shadow:     0 18px 40px -24px rgba(28, 36, 51, 0.45);
-  --shadow-sm:  0 8px 24px -16px rgba(28, 36, 51, 0.55);
+  --shadow:     0 18px 40px -24px rgba(9, 35, 82, 0.45);
+  --shadow-sm:  0 8px 24px -16px rgba(9, 35, 82, 0.55);
   --serif:      "Playfair Display", Georgia, "Times New Roman", serif;
   --sans:       "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -122,7 +122,7 @@ p { color: var(--text); }
   border-bottom: 1px solid var(--line);
   transition: box-shadow .2s ease;
 }
-.site-header.scrolled { box-shadow: 0 6px 24px -18px rgba(28,36,51,.7); }
+.site-header.scrolled { box-shadow: 0 6px 24px -18px rgba(9,35,82,.7); }
 .nav {
   display: flex;
   align-items: center;
@@ -131,8 +131,26 @@ p { color: var(--text); }
   margin: 0 auto;
   padding: 14px 24px;
 }
-.nav__logo { display: flex; align-items: center; flex-shrink: 0; }
-.nav__logo img { height: 52px; width: auto; }
+.nav__logo { display: flex; align-items: center; flex-shrink: 0; text-decoration: none; }
+.nav__logo:hover { text-decoration: none; }
+.nav__wordmark {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.nav__wordmark > span {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 3px;
+}
 .nav__menu {
   display: flex;
   align-items: center;
@@ -242,7 +260,7 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
 .hero::after {
   content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(28,36,51,.55) 0%, rgba(28,36,51,.82) 100%);
+  background: linear-gradient(180deg, rgba(9,35,82,.55) 0%, rgba(9,35,82,.82) 100%);
 }
 .hero__inner {
   position: relative;
@@ -530,7 +548,7 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
 .form-field textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(177,138,78,.15);
+  box-shadow: 0 0 0 3px rgba(227,123,72,.15);
 }
 .form-field--full fieldset {
   border: none; padding: 0;
