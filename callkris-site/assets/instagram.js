@@ -9,8 +9,11 @@
   var track = row.querySelector(".instagram-row__track");
   var profileUrl = "https://www.instagram.com/kriskereluk/";
   var STATIC_FEED = "/assets/data/instagram-reels.json";
+  var modal = null;
+  var modalFrame = null;
 
   renderSkeletons(5);
+  ensureModal();
 
   loadStaticFeed()
     .then(function (data) {
@@ -88,25 +91,24 @@
   }
 
   function createReelCard(reel, index) {
-    var link = document.createElement("a");
-    link.className = "instagram-reel";
-    link.href = reel.permalink;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.setAttribute("aria-label", reelCaption(reel, index));
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "instagram-reel";
+    button.setAttribute("aria-label", "Play " + reelCaption(reel, index));
 
-    if (reel.thumbnail_url) {
+    var thumbSrc = reel.thumbnail || reel.thumbnail_url;
+    if (thumbSrc) {
       var img = document.createElement("img");
-      img.src = reel.thumbnail_url;
+      img.src = thumbSrc;
       img.alt = "";
       img.loading = index < 2 ? "eager" : "lazy";
       img.decoding = "async";
-      link.appendChild(img);
+      button.appendChild(img);
     } else {
       var placeholder = document.createElement("div");
       placeholder.className = "instagram-reel__placeholder";
       placeholder.setAttribute("aria-hidden", "true");
-      link.appendChild(placeholder);
+      button.appendChild(placeholder);
     }
 
     var play = document.createElement("span");
@@ -114,9 +116,13 @@
     play.setAttribute("aria-hidden", "true");
     play.innerHTML =
       '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>';
-    link.appendChild(play);
+    button.appendChild(play);
 
-    return link;
+    button.addEventListener("click", function () {
+      openReel(reel);
+    });
+
+    return button;
   }
 
   function reelCaption(reel, index) {
@@ -124,5 +130,63 @@
       return reel.caption.replace(/\s+/g, " ").trim().slice(0, 120);
     }
     return "Instagram reel " + (index + 1) + " from @kriskereluk";
+  }
+
+  function reelShortcode(reel) {
+    if (reel.shortcode) {
+      return reel.shortcode;
+    }
+    var match = reel.permalink.match(/\/reel\/([^/]+)/);
+    return match ? match[1] : "";
+  }
+
+  function ensureModal() {
+    modal = document.createElement("div");
+    modal.className = "instagram-modal";
+    modal.hidden = true;
+    modal.innerHTML =
+      '<div class="instagram-modal__backdrop" data-instagram-close></div>' +
+      '<div class="instagram-modal__dialog" role="dialog" aria-modal="true" aria-label="Instagram reel">' +
+      '<button type="button" class="instagram-modal__close" data-instagram-close aria-label="Close reel">&times;</button>' +
+      '<div class="instagram-modal__frame-wrap">' +
+      '<iframe class="instagram-modal__frame" title="Instagram reel player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>' +
+      "</div>" +
+      '<a class="instagram-modal__link" target="_blank" rel="noopener noreferrer">Open on Instagram</a>' +
+      "</div>";
+    document.body.appendChild(modal);
+
+    modalFrame = modal.querySelector(".instagram-modal__frame");
+    modal.querySelectorAll("[data-instagram-close]").forEach(function (el) {
+      el.addEventListener("click", closeReel);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && modal && !modal.hidden) {
+        closeReel();
+      }
+    });
+  }
+
+  function openReel(reel) {
+    var shortcode = reelShortcode(reel);
+    if (!shortcode || !modal || !modalFrame) {
+      window.open(reel.permalink, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    modalFrame.src = "https://www.instagram.com/reel/" + shortcode + "/embed";
+    modal.querySelector(".instagram-modal__link").href = reel.permalink;
+    modal.hidden = false;
+    document.body.classList.add("instagram-modal-open");
+    modal.querySelector(".instagram-modal__close").focus();
+  }
+
+  function closeReel() {
+    if (!modal || !modalFrame) {
+      return;
+    }
+    modal.hidden = true;
+    modalFrame.src = "";
+    document.body.classList.remove("instagram-modal-open");
   }
 })();

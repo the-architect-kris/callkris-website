@@ -481,13 +481,21 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
   overflow: hidden;
   background: var(--ink);
   box-shadow: var(--shadow-sm);
-  text-decoration: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
   transition: transform .2s ease, box-shadow .2s ease;
 }
-.instagram-reel:hover {
-  text-decoration: none;
+.instagram-reel:hover,
+.instagram-reel:focus-visible {
   transform: translateY(-4px);
   box-shadow: var(--shadow);
+  outline: none;
+}
+.instagram-reel:focus-visible {
+  box-shadow: var(--shadow), 0 0 0 3px rgba(227, 123, 72, 0.45);
 }
 .instagram-reel img,
 .instagram-reel__placeholder {
@@ -545,6 +553,68 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
 .instagram-row__empty .btn {
   display: inline-flex;
   width: auto;
+}
+
+/* Instagram reel modal player */
+body.instagram-modal-open { overflow: hidden; }
+.instagram-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.instagram-modal[hidden] { display: none; }
+.instagram-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 35, 82, 0.72);
+  backdrop-filter: blur(4px);
+}
+.instagram-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 420px);
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 16px 16px 20px;
+  box-shadow: var(--shadow);
+}
+.instagram-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(9, 35, 82, 0.08);
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.instagram-modal__close:hover { background: rgba(9, 35, 82, 0.14); }
+.instagram-modal__frame-wrap {
+  aspect-ratio: 9 / 16;
+  border-radius: calc(var(--radius-lg) - 4px);
+  overflow: hidden;
+  background: #000;
+}
+.instagram-modal__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.instagram-modal__link {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--accent-dk);
 }
 
 /* Reviews */
