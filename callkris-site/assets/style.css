@@ -64,7 +64,8 @@ p { color: var(--text); }
 .section--ink p { color: #c3c9d4; }
 .center { text-align: center; }
 .measure { max-width: 680px; }
-.center .measure { margin-left: auto; margin-right: auto; }
+.center .measure,
+.measure.center { margin-left: auto; margin-right: auto; }
 
 .eyebrow {
   display: inline-block;
@@ -108,7 +109,8 @@ p { color: var(--text); }
 .btn--outline-ink { background: transparent; color: #fff; border-color: var(--line-dk); }
 .btn--outline-ink:hover { border-color: var(--accent); color: #fff; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 14px; }
-.center .btn-row { justify-content: center; }
+.center .btn-row,
+.btn-row.center { justify-content: center; }
 
 /* ==========================================================================
    Header / Navigation
@@ -294,7 +296,14 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
    ========================================================================== */
 .section-head { margin-bottom: 48px; }
 .section-head h2 { max-width: 22ch; }
-.center .section-head h2 { margin-left: auto; margin-right: auto; }
+.section-head.center { text-align: center; }
+.center .section-head h2,
+.section-head.center h2 {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  max-width: 32ch;
+}
 
 /* Split (image + text) */
 .split {
@@ -348,6 +357,7 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: auto auto 1fr;
   gap: 28px;
 }
 .feature {
@@ -355,17 +365,24 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 32px 28px;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
 }
 .section--cream .feature { background: #fff; }
 .feature__num {
   font-family: var(--serif);
   font-size: 2.4rem;
   font-weight: 700;
-  color: var(--sand);
+  color: rgba(9, 35, 82, 0.14);
   line-height: 1;
   margin-bottom: 10px;
 }
-.feature h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.feature h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
 .feature p { color: var(--muted); font-size: 0.97rem; }
 
 /* Process / stages — alternating rows */
