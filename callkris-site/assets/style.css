@@ -468,6 +468,10 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
   width: max-content;
   padding-bottom: 8px;
 }
+.instagram-row__track--empty {
+  width: 100%;
+  justify-content: center;
+}
 .instagram-reel {
   position: relative;
   flex: 0 0 220px;
