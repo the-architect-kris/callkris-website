@@ -65,7 +65,11 @@ p { color: var(--text); }
 .center { text-align: center; }
 .measure { max-width: 680px; }
 .center .measure,
-.measure.center { margin-left: auto; margin-right: auto; }
+.measure.center,
+.section-head.center .measure {
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .eyebrow {
   display: inline-block;
@@ -315,13 +319,23 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
    ========================================================================== */
 .section-head { margin-bottom: 48px; }
 .section-head h2 { max-width: 22ch; }
-.section-head.center { text-align: center; }
-.center .section-head h2,
+.section-head.center {
+  text-align: center;
+}
+.section-head.center .eyebrow {
+  display: inline-block;
+}
 .section-head.center h2 {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  text-align: center;
+}
+.section-head.center .lead {
+  text-align: center;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
-  max-width: 32ch;
 }
 
 /* Split (image + text) */
@@ -376,17 +390,17 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: auto auto 1fr;
   gap: 28px;
+  align-items: stretch;
 }
 .feature {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 32px 28px;
-  display: grid;
-  grid-template-rows: subgrid;
-  grid-row: span 3;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .section--cream .feature { background: #fff; }
 .feature__num {
@@ -396,13 +410,15 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
   color: rgba(9, 35, 82, 0.14);
   line-height: 1;
   margin-bottom: 10px;
+  flex-shrink: 0;
 }
 .feature h3 {
   font-size: 1.2rem;
   margin-bottom: 8px;
   line-height: 1.3;
+  min-height: 4.8em;
 }
-.feature p { color: var(--muted); font-size: 0.97rem; }
+.feature p { color: var(--muted); font-size: 0.97rem; flex-grow: 1; }
 
 /* Process / stages — alternating rows */
 .stage {
