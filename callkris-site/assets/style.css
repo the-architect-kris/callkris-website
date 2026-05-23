@@ -133,25 +133,44 @@ p { color: var(--text); }
   margin: 0 auto;
   padding: 14px 24px;
 }
-.nav__logo { display: flex; align-items: center; flex-shrink: 0; text-decoration: none; }
-.nav__logo:hover { text-decoration: none; }
-.nav__wordmark {
+.nav__logo { display: flex; align-items: center; flex-shrink: 0; }
+
+/* Text wordmark — primary brand mark across the site */
+.wordmark {
+  display: inline-block;
   font-family: var(--serif);
-  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--ink);
   line-height: 1.15;
   letter-spacing: -0.01em;
+  text-decoration: none;
 }
-.nav__wordmark > span {
+.wordmark:hover { text-decoration: none; }
+.wordmark > span {
   display: block;
   font-family: var(--sans);
-  font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
+}
+.wordmark--light {
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+.wordmark--light > span {
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
   margin-top: 3px;
+}
+.wordmark--dark {
+  font-size: 1.7rem;
+  color: #fff;
+  margin-bottom: 14px;
+}
+.wordmark--dark:hover { color: #fff; }
+.wordmark--dark > span {
+  font-size: 0.66rem;
+  letter-spacing: 0.17em;
+  margin-top: 5px;
 }
 .nav__menu {
   display: flex;
@@ -623,27 +642,7 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
   grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
   gap: 40px;
 }
-.footer-brand img { height: 78px; width: auto; margin-bottom: 18px; }
 .footer-brand p { color: #9aa2b1; font-size: 0.94rem; max-width: 30ch; }
-.footer-wordmark {
-  font-family: var(--serif);
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: #fff;
-  display: inline-block;
-  margin-bottom: 14px;
-}
-.footer-wordmark:hover { color: #fff; text-decoration: none; }
-.footer-wordmark span {
-  display: block;
-  font-family: var(--sans);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-top: 5px;
-}
 .footer-social { display: flex; gap: 14px; margin-top: 18px; }
 .footer-social a {
   display: inline-flex; align-items: center; justify-content: center;
