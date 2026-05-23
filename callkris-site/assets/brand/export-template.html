@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: transparent; }
+
+  .export {
+    display: inline-block;
+    padding: 0;
+    background: transparent;
+  }
+  .export--light { background: #ffffff; }
+  .export--dark  { background: #092352; }
+
+  .wordmark {
+    display: inline-block;
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .wordmark > span {
+    display: block;
+    font-family: Inter, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #e37b48;
+    white-space: nowrap;
+  }
+
+  /* Nav / web sizing */
+  .wordmark--web-light { font-size: 20px; color: #092352; padding: 8px 12px; }
+  .wordmark--web-light > span { font-size: 9.28px; letter-spacing: 0.16em; margin-top: 3px; }
+  .wordmark--web-dark  { font-size: 20px; color: #ffffff; padding: 8px 12px; }
+  .wordmark--web-dark > span  { font-size: 9.28px; letter-spacing: 0.16em; margin-top: 3px; }
+
+  /* Print sizing — 3× nav scale */
+  .wordmark--print-light { font-size: 60px; color: #092352; padding: 24px 36px; }
+  .wordmark--print-light > span { font-size: 27.84px; letter-spacing: 0.16em; margin-top: 9px; }
+  .wordmark--print-dark  { font-size: 60px; color: #ffffff; padding: 24px 36px; }
+  .wordmark--print-dark > span  { font-size: 27.84px; letter-spacing: 0.16em; margin-top: 9px; }
+</style>
+</head>
+<body>
+
+<div id="web-light" class="export export--light">
+  <div class="wordmark wordmark--web-light">Kris Kereluk<span>Personal Real Estate Corp</span></div>
+</div>
+
+<div id="web-dark" class="export export--dark">
+  <div class="wordmark wordmark--web-dark">Kris Kereluk<span>Personal Real Estate Corp</span></div>
+</div>
+
+<div id="print-light" class="export export--light">
+  <div class="wordmark wordmark--print-light">Kris Kereluk<span>Personal Real Estate Corp</span></div>
+</div>
+
+<div id="print-dark" class="export export--dark">
+  <div class="wordmark wordmark--print-dark">Kris Kereluk<span>Personal Real Estate Corp</span></div>
+</div>
+
+</body>
+</html>
