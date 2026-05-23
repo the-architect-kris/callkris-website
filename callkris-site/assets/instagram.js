@@ -11,8 +11,11 @@
   var STATIC_FEED = "/assets/data/instagram-reels.json";
   var modal = null;
   var modalFrame = null;
+  var allReels = [];
+  var GAP = 18;
+  var MIN_CARD = 140;
+  var MAX_CARD = 220;
 
-  renderSkeletons(5);
   ensureModal();
 
   loadStaticFeed()
@@ -22,12 +25,33 @@
       }
       return loadApiFeed();
     })
-    .then(renderFeed)
+    .then(function (data) {
+      profileUrl = data.profile || profileUrl;
+      allReels = (data.reels || []).filter(function (reel) {
+        return reel && reel.permalink;
+      });
+
+      if (!allReels.length) {
+        track.innerHTML = "";
+        track.classList.add("instagram-row__track--empty");
+        renderEmptyState();
+        return;
+      }
+
+      renderVisibleReels();
+      window.addEventListener("resize", onResize, { passive: true });
+    })
     .catch(function () {
       track.innerHTML = "";
       track.classList.add("instagram-row__track--empty");
       renderEmptyState();
     });
+
+  var resizeTimer;
+  function onResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderVisibleReels, 120);
+  }
 
   function loadStaticFeed() {
     return fetch(STATIC_FEED).then(function (response) {
@@ -47,34 +71,32 @@
     });
   }
 
-  function renderFeed(data) {
-    profileUrl = data.profile || profileUrl;
-    var reels = (data.reels || []).filter(function (reel) {
-      return reel && reel.permalink;
-    });
-
-    track.innerHTML = "";
-    track.classList.remove("instagram-row__track--empty");
-
-    if (!reels.length) {
-      track.classList.add("instagram-row__track--empty");
-      renderEmptyState();
-      return;
+  function visibleCount(containerWidth) {
+    if (!containerWidth) {
+      return Math.min(4, allReels.length);
     }
 
-    reels.forEach(function (reel, index) {
-      track.appendChild(createReelCard(reel, index));
-    });
+    var maxByMin = Math.floor((containerWidth + GAP) / (MIN_CARD + GAP));
+    var count = Math.max(2, Math.min(maxByMin, allReels.length));
+
+    while (count > 2 && (containerWidth - (count - 1) * GAP) / count > MAX_CARD) {
+      count -= 1;
+    }
+
+    return count;
   }
 
-  function renderSkeletons(count) {
+  function renderVisibleReels() {
+    var width = row.clientWidth;
+    var count = visibleCount(width);
+
+    track.style.setProperty("--instagram-cols", String(count));
+    track.classList.remove("instagram-row__track--empty");
     track.innerHTML = "";
-    for (var i = 0; i < count; i++) {
-      var skeleton = document.createElement("div");
-      skeleton.className = "instagram-reel instagram-reel--skeleton";
-      skeleton.setAttribute("aria-hidden", "true");
-      track.appendChild(skeleton);
-    }
+
+    allReels.slice(0, count).forEach(function (reel, index) {
+      track.appendChild(createReelCard(reel, index));
+    });
   }
 
   function renderEmptyState() {

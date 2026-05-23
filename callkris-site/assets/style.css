@@ -449,33 +449,21 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
 
 /* Instagram reel row */
 .instagram-row {
-  margin: 0 -24px;
-  padding: 0 24px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--sand) transparent;
-}
-.instagram-row::-webkit-scrollbar { height: 6px; }
-.instagram-row::-webkit-scrollbar-thumb {
-  background: var(--sand);
-  border-radius: 999px;
+  overflow: hidden;
 }
 .instagram-row__track {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(var(--instagram-cols, 4), minmax(0, 1fr));
   gap: 18px;
-  width: max-content;
-  padding-bottom: 8px;
+  width: 100%;
 }
 .instagram-row__track--empty {
-  width: 100%;
+  display: flex;
   justify-content: center;
 }
 .instagram-reel {
   position: relative;
-  flex: 0 0 220px;
-  width: 220px;
+  width: 100%;
   aspect-ratio: 9 / 16;
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -910,7 +898,6 @@ body.instagram-modal-open { overflow: hidden; }
   .split--reverse .split__media,
   .stage--reverse .stage__media { order: 0; }
   .cards-3, .feature-grid, .reviews-grid, .reviews-grid--2 { grid-template-columns: 1fr; }
-  .instagram-reel { flex-basis: 180px; width: 180px; }
   .form-grid { grid-template-columns: 1fr; }
   .form-card { padding: 26px 22px; }
   .hero__inner { padding: 84px 24px 90px; }
