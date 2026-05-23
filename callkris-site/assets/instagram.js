@@ -8,34 +8,61 @@
 
   var track = row.querySelector(".instagram-row__track");
   var profileUrl = "https://www.instagram.com/kriskereluk/";
+  var STATIC_FEED = "/assets/data/instagram-reels.json";
 
   renderSkeletons(5);
 
-  fetch("/api/instagram-reels")
-    .then(function (response) {
-      return response.json();
-    })
+  loadStaticFeed()
     .then(function (data) {
-      profileUrl = data.profile || profileUrl;
-      var reels = (data.reels || []).filter(function (reel) {
-        return reel && reel.permalink;
-      });
-
-      track.innerHTML = "";
-
-      if (!reels.length) {
-        renderEmptyState();
-        return;
+      if (data.reels && data.reels.length) {
+        return data;
       }
-
-      reels.forEach(function (reel, index) {
-        track.appendChild(createReelCard(reel, index));
-      });
+      return loadApiFeed();
     })
+    .then(renderFeed)
     .catch(function () {
       track.innerHTML = "";
+      track.classList.add("instagram-row__track--empty");
       renderEmptyState();
     });
+
+  function loadStaticFeed() {
+    return fetch(STATIC_FEED).then(function (response) {
+      if (!response.ok) {
+        throw new Error("Static feed unavailable");
+      }
+      return response.json();
+    });
+  }
+
+  function loadApiFeed() {
+    return fetch("/api/instagram-reels/").then(function (response) {
+      if (!response.ok) {
+        throw new Error("API feed unavailable");
+      }
+      return response.json();
+    });
+  }
+
+  function renderFeed(data) {
+    profileUrl = data.profile || profileUrl;
+    var reels = (data.reels || []).filter(function (reel) {
+      return reel && reel.permalink;
+    });
+
+    track.innerHTML = "";
+    track.classList.remove("instagram-row__track--empty");
+
+    if (!reels.length) {
+      track.classList.add("instagram-row__track--empty");
+      renderEmptyState();
+      return;
+    }
+
+    reels.forEach(function (reel, index) {
+      track.appendChild(createReelCard(reel, index));
+    });
+  }
 
   function renderSkeletons(count) {
     track.innerHTML = "";

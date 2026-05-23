@@ -93,7 +93,17 @@ async function fetchPublicProfileReels(username) {
     }
   );
 
-  const payload = await response.json();
+  const text = await response.text();
+  if (!text) {
+    throw new Error("Instagram returned an empty response");
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(text);
+  } catch {
+    throw new Error("Instagram returned an invalid response");
+  }
 
   if (!response.ok) {
     throw new Error(payload.message || "Instagram profile request failed");
@@ -140,6 +150,21 @@ async function fetchReelMeta(permalink) {
     thumbnail_url: imageMatch ? decodeHtml(imageMatch[1]) : null,
     caption: titleMatch ? decodeHtml(titleMatch[1]) : "",
   };
+}
+
+function readStaticReels(config) {
+  return (config.reels || [])
+    .slice(0, MAX_REELS)
+    .map(function (entry) {
+      if (typeof entry === "string") {
+        return { permalink: entry, thumbnail_url: null, caption: "" };
+      }
+      return {
+        permalink: entry.permalink,
+        thumbnail_url: entry.thumbnail_url || null,
+        caption: entry.caption || "",
+      };
+    });
 }
 
 async function fetchFallbackReels(config) {
@@ -196,15 +221,34 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const fallbackReels = await fetchFallbackReels(fallbackConfig);
+    const fallbackReels = readStaticReels(fallbackConfig);
+    if (fallbackReels.length) {
+      return res.status(200).json({
+        profile,
+        source: "static",
+        reels: fallbackReels,
+      });
+    }
+
+    const enrichedReels = await fetchFallbackReels(fallbackConfig);
     return res.status(200).json({
       profile,
       source: "fallback",
-      reels: fallbackReels,
+      reels: enrichedReels,
     });
   } catch (error) {
+    const fallbackReels = readStaticReels(fallbackConfig);
+    if (fallbackReels.length) {
+      return res.status(200).json({
+        profile,
+        source: "static",
+        reels: fallbackReels,
+        error: error.message,
+      });
+    }
+
     try {
-      const fallbackReels = await fetchFallbackReels(fallbackConfig);
+      const enrichedReels = await fetchFallbackReels(fallbackConfig);
       return res.status(200).json({
         profile,
         source: "fallback",
