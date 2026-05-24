@@ -69,7 +69,7 @@
           <a href="https://search.callkris.ca/snapshot">Market Snapshot</a>
           <div class="nav__dd-label">Account</div>
           <a href="/tools/sign-in/">Sign In</a>
-          <a href="https://search.callkris.ca/?isPopup=1">Register</a>
+          <a href="/tools/register/">Register</a>
         </div>
       </li>
       <li class="nav__item"><a href="/contact/" class="nav__link">Contact</a></li>
@@ -97,14 +97,16 @@
 </section>
 
 <section class="auth-panel">
-  <div class="auth-panel__card">
-    <iframe
-      id="auth-login-frame"
-      title="Sign in to property search"
-      src="https://site-user.chime.me/chime-site/third/login?theme=fashion-new&amp;fb=true&amp;g=true&amp;fbBtnText=Continue%20with%20Facebook&amp;gBtnText=Continue%20with%20Gmail&amp;v1"
-      scrolling="no"
-    ></iframe>
-    <p class="auth-panel__note">New here? <a href="https://search.callkris.ca/?isPopup=1">Create a free account</a>.</p>
+  <div class="auth-panel__shell">
+    <div class="auth-panel__card">
+      <iframe
+        id="auth-login-frame"
+        title="Sign in to property search"
+        src="https://site-user.chime.me/chime-site/third/login?theme=fashion-new&amp;fb=true&amp;g=true&amp;fbBtnText=Continue%20with%20Facebook&amp;gBtnText=Continue%20with%20Gmail&amp;v1"
+        scrolling="no"
+      ></iframe>
+      <p class="auth-panel__note">New here? <a href="/tools/register/">Create a free account</a>.</p>
+    </div>
   </div>
 </section>
 </main>

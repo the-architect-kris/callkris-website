@@ -987,13 +987,47 @@ body.instagram-modal-open { overflow: hidden; }
   padding: 40px 24px 64px;
   background: #f5f6fa;
 }
+.auth-panel__shell {
+  width: min(100%, 420px);
+  margin-inline: auto;
+}
 .auth-panel__card {
-  max-width: 400px;
-  margin: 0 auto;
+  width: 100%;
   padding: 28px 28px 20px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+.auth-panel__card h2 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.auth-panel__lead {
+  margin: 0 0 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+.auth-panel__benefits {
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.auth-panel__benefits li {
+  position: relative;
+  padding-left: 1.4rem;
+  margin-bottom: 10px;
+  color: #334155;
+  font-size: 0.95rem;
+}
+.auth-panel__benefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent-dk);
+  font-weight: 700;
 }
 .auth-panel iframe {
   display: block;
@@ -1008,6 +1042,9 @@ body.instagram-modal-open { overflow: hidden; }
   text-align: center;
   font-size: 0.95rem;
   color: #64748b;
+}
+.auth-panel__note + .auth-panel__note {
+  margin-top: 12px;
 }
 .auth-panel__note a {
   color: var(--accent-dk);
