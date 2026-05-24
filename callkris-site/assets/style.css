@@ -314,6 +314,51 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
 .pagehero h1 { color: #fff; }
 .pagehero p { color: #d4d9e2; margin-top: 16px; max-width: 60ch; }
 
+/* Legal / policy pages */
+.policy {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.policy > * + * { margin-top: 1.25em; }
+.policy h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  margin-top: 2.4em;
+  margin-bottom: 0.6em;
+}
+.policy h3 {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 1.6em;
+  margin-bottom: 0.4em;
+}
+.policy p,
+.policy li { color: var(--muted); font-size: 0.98rem; }
+.policy ul,
+.policy ol {
+  padding-left: 1.35em;
+  list-style: disc;
+}
+.policy ol { list-style: decimal; }
+.policy li + li { margin-top: 0.45em; }
+.policy a { color: var(--accent-dk); }
+.policy__meta {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.policy__callout {
+  margin-top: 0;
+  padding: 22px 24px;
+  border-radius: var(--radius-lg);
+  background: var(--cream);
+  border: 1px solid var(--line);
+}
+.policy__callout p { color: var(--text); margin-top: 0; }
+.policy__callout p + p { margin-top: 0.75em; }
+.policy__callout .btn { margin-top: 14px; }
+
 /* ==========================================================================
    Generic content blocks
    ========================================================================== */
@@ -848,6 +893,8 @@ body.instagram-modal-open { overflow: hidden; }
   align-items: center;
 }
 .footer-bottom p { font-size: 0.84rem; color: #828a98; }
+.footer-bottom p a { color: #a8b0bd; }
+.footer-bottom p a:hover { color: #fff; }
 .footer-bottom img { height: 38px; width: auto; opacity: .9; }
 
 /* ==========================================================================
