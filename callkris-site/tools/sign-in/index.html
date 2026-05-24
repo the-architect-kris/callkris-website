@@ -97,13 +97,14 @@
 </section>
 
 <section class="auth-panel">
-  <div class="container">
+  <div class="auth-panel__card">
     <iframe
+      id="auth-login-frame"
       title="Sign in to property search"
       src="https://site-user.chime.me/chime-site/third/login?theme=fashion-new&amp;fb=true&amp;g=true&amp;fbBtnText=Continue%20with%20Facebook&amp;gBtnText=Continue%20with%20Gmail&amp;v1"
-      loading="lazy"
+      scrolling="no"
     ></iframe>
-    <p class="auth-panel__note center">New here? <a href="https://search.callkris.ca/?isPopup=1">Create a free account</a>.</p>
+    <p class="auth-panel__note">New here? <a href="https://search.callkris.ca/?isPopup=1">Create a free account</a>.</p>
   </div>
 </section>
 </main>
@@ -154,5 +155,29 @@
 </footer>
 
 <script src="/assets/main.js" defer></script>
+<script>
+(function () {
+  var frame = document.getElementById("auth-login-frame");
+  if (!frame) return;
+
+  function setHeight(value) {
+    var height = Number(value);
+    if (!height) return;
+    frame.style.height = Math.min(Math.max(height, 280), 720) + "px";
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.origin.includes("chime.me")) return;
+    var data = event.data;
+    if (typeof data === "number") {
+      setHeight(data);
+      return;
+    }
+    if (data && typeof data === "object" && data.height) {
+      setHeight(data.height);
+    }
+  });
+})();
+</script>
 </body>
 </html>
