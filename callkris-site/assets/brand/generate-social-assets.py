@@ -17,11 +17,14 @@ FAVICON_SOURCE_URL = (
     "https://cdn.lofty.com/image/fs/517975163338756/website/12194/"
     "cmsbuild/2025107_bb754ba208234180.png"
 )
-HERO_PHOTO = os.path.join(UPLOADS, "Kris-and-Marco-Real-Estate-Houses-36-1024x683.jpg")
+HERO_PHOTO = os.path.join(UPLOADS, "Kris-and-Marco-Real-Estate-Houses-12-1024x683.jpg")
+PANEL_WIDTH = 700
 
 INK = (9, 35, 82)
+INK_DEEP = (6, 26, 58)
 ACCENT = (227, 123, 72)
 WHITE = (255, 255, 255)
+MUTED = (196, 206, 222)
 
 FONT_URLS = {
     "playfair": (
@@ -90,80 +93,121 @@ def cover_crop(image: Image.Image, width: int, height: int) -> Image.Image:
     return resized.crop((left, top, left + width, top + height))
 
 
-def draw_gradient_overlay(canvas: Image.Image) -> None:
-    overlay = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    draw = ImageDraw.Draw(overlay)
-    width, height = canvas.size
-
-    for x in range(width):
-        ratio = x / max(width - 1, 1)
-        alpha = int(215 - ratio * 95)
-        draw.line([(x, 0), (x, height)], fill=(*INK, alpha))
-
-    for y in range(height):
-        ratio = y / max(height - 1, 1)
-        if ratio < 0.18:
-            continue
-        fade = int((ratio - 0.18) / 0.82 * 120)
-        draw.line([(0, y), (width, y)], fill=(0, 0, 0, fade))
-
-    canvas.alpha_composite(overlay)
+def draw_tracked_caps(
+    draw: ImageDraw.ImageDraw,
+    pos: tuple[int, int],
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    fill: tuple[int, int, int],
+    tracking: float = 0.22,
+) -> None:
+    x, y = pos
+    spacing = font.size * tracking
+    for index, char in enumerate(text):
+        draw.text((x, y), char, font=font, fill=fill)
+        x += draw.textlength(char, font=font) + spacing
 
 
-def circular_avatar(source: Image.Image, size: int, border: int = 8) -> Image.Image:
-    inner = ImageOps.fit(source, (size, size), method=Image.Resampling.LANCZOS)
-    mask = Image.new("L", (size, size), 0)
-    ImageDraw.Draw(mask).ellipse((0, 0, size - 1, size - 1), fill=255)
-    inner.putalpha(mask)
-
-    total = size + border * 2
-    framed = Image.new("RGBA", (total, total), (0, 0, 0, 0))
-    ring = Image.new("RGBA", (total, total), (0, 0, 0, 0))
-    ImageDraw.Draw(ring).ellipse((0, 0, total - 1, total - 1), fill=(*WHITE, 255))
-    framed.alpha_composite(ring)
-    framed.alpha_composite(inner, (border, border))
-    return framed
+def wrap_text(
+    draw: ImageDraw.ImageDraw,
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    max_width: float,
+) -> list[str]:
+    words = text.split()
+    lines: list[str] = []
+    current = words[0]
+    for word in words[1:]:
+        candidate = current + " " + word
+        if draw.textlength(candidate, font=font) <= max_width:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    lines.append(current)
+    return lines
 
 
 def write_og_preview(avatar_source: Image.Image) -> None:
     width, height = 1200, 630
-    photo = Image.open(HERO_PHOTO).convert("RGBA")
-    canvas = cover_crop(photo, width, height)
-    draw_gradient_overlay(canvas)
+    canvas = Image.new("RGBA", (width, height), (*INK, 255))
     draw = ImageDraw.Draw(canvas)
 
-    eyebrow_font = load_font("inter-semibold", 18)
-    name_font = load_font("playfair", 78)
-    desc_font = load_font("inter-medium", 24)
-    body_font = load_font("inter-medium", 22)
-    url_font = load_font("inter-semibold", 20)
+    photo = cover_crop(Image.open(HERO_PHOTO).convert("RGBA"), width - PANEL_WIDTH, height)
+    photo_panel = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    photo_panel.paste(photo, (PANEL_WIDTH, 0))
 
-    draw.text((72, 86), "METRO VANCOUVER REAL ESTATE", font=eyebrow_font, fill=(*ACCENT, 255))
-    draw.text((72, 126), "Kris Kereluk", font=name_font, fill=(*WHITE, 255))
-    draw.text((72, 226), "Personal Real Estate Corp", font=desc_font, fill=(*ACCENT, 255))
-    draw.text(
-        (72, 286),
-        "Buying · Selling · Featured Listings",
-        font=body_font,
-        fill=(255, 255, 255, 220),
+    seam = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    seam_draw = ImageDraw.Draw(seam)
+    for x in range(48):
+        alpha = int(150 * (1 - x / 47))
+        seam_draw.line(
+            [(PANEL_WIDTH + x, 0), (PANEL_WIDTH + x, height)],
+            fill=(*INK_DEEP, alpha),
+        )
+    photo_panel.alpha_composite(seam)
+    canvas.alpha_composite(photo_panel)
+
+    panel = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    panel_draw = ImageDraw.Draw(panel)
+    panel_draw.rectangle((0, 0, PANEL_WIDTH, height), fill=(*INK, 255))
+    panel_draw.rectangle((0, 0, 8, height), fill=(*ACCENT, 255))
+    panel_draw.rectangle((64, 88, 120, 92), fill=(*ACCENT, 255))
+    canvas.alpha_composite(panel)
+
+    draw = ImageDraw.Draw(canvas)
+
+    eyebrow_font = load_font("inter-semibold", 17)
+    name_font = load_font("playfair", 86)
+    desc_font = load_font("inter-semibold", 24)
+    lead_font = load_font("inter-medium", 28)
+    body_font = load_font("inter-medium", 21)
+    url_font = load_font("inter-semibold", 22)
+
+    text_x = 64
+    draw_tracked_caps(
+        draw,
+        (text_x, 72),
+        "METRO VANCOUVER REAL ESTATE",
+        eyebrow_font,
+        ACCENT,
     )
+    draw.text((text_x, 118), "Kris Kereluk", font=name_font, fill=WHITE)
+    draw.text((text_x, 236), "Personal Real Estate Corp", font=desc_font, fill=ACCENT)
     draw.text(
-        (72, 332),
-        "Vancouver · Burnaby · New Westminster · Coquitlam · Port Moody",
-        font=body_font,
-        fill=(255, 255, 255, 185),
+        (text_x, 292),
+        "Buying & selling across\nMetro Vancouver",
+        font=lead_font,
+        fill=WHITE,
+        spacing=8,
     )
 
-    draw.rectangle((72, 548, 240, 552), fill=(*ACCENT, 255))
-    draw.text((72, 566), "callkris.ca", font=url_font, fill=(*WHITE, 235))
+    for index, line in enumerate(
+        wrap_text(
+            draw,
+            "Vancouver · Burnaby · New Westminster · Coquitlam · Port Moody",
+            body_font,
+            PANEL_WIDTH - text_x - 48,
+        )
+    ):
+        draw.text((text_x, 392 + index * 30), line, font=body_font, fill=MUTED)
 
-    avatar = circular_avatar(avatar_source, 250, border=10)
-    canvas.alpha_composite(avatar, (860, 170))
+    avatar = ImageOps.fit(avatar_source, (118, 118), method=Image.Resampling.LANCZOS)
+    avatar_mask = Image.new("L", avatar.size, 0)
+    ImageDraw.Draw(avatar_mask).ellipse((0, 0, 117, 117), fill=255)
+    avatar.putalpha(avatar_mask)
+    framed = Image.new("RGBA", (134, 134), (0, 0, 0, 0))
+    ImageDraw.Draw(framed).ellipse((0, 0, 133, 133), fill=(*ACCENT, 255))
+    framed.alpha_composite(avatar, (8, 8))
+    canvas.alpha_composite(framed, (text_x, 500))
+
+    draw.text((text_x + 154, 528), "callkris.ca", font=url_font, fill=WHITE)
+    draw.text((text_x + 154, 558), "778-288-4481", font=body_font, fill=MUTED)
 
     canvas.convert("RGB").save(
         os.path.join(BASE, "og-preview.jpg"),
         format="JPEG",
-        quality=88,
+        quality=90,
         optimize=True,
     )
 
