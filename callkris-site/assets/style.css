@@ -282,6 +282,7 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
   object-fit: cover;
   opacity: 0.32;
 }
+.hero__bg--vancouver { object-position: center 18%; }
 .hero::after {
   content: "";
   position: absolute; inset: 0;
