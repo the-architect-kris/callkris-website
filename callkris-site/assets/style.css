@@ -982,3 +982,15 @@ body.instagram-modal-open { overflow: hidden; }
 
 /* Default desktop: hide mobile-only CTA block inside menu */
 .nav__cta-mobile { display: none; }
+
+.auth-panel { padding: 48px 0 72px; }
+.auth-panel .container { max-width: 520px; }
+.auth-panel iframe {
+  width: 100%;
+  min-height: 560px;
+  border: none;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+}
+.auth-panel__note { margin-top: 24px; color: var(--muted, #64748b); }
