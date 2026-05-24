@@ -92,7 +92,10 @@
 
 <!-- ============================ HERO ============================ -->
 <section class="hero">
-  <img class="hero__bg hero__bg--vancouver" src="/assets/images/vancouver-hero.jpg" alt="Vancouver skyline and park on a sunny evening">
+  <picture class="hero__bg-wrap" aria-hidden="true">
+    <source media="(min-width: 980px)" srcset="/assets/images/vancouver-hero-wide.jpg">
+    <img class="hero__bg hero__bg--vancouver" src="/assets/images/vancouver-hero.jpg" alt="">
+  </picture>
   <div class="hero__inner">
     <span class="eyebrow">Metro Vancouver Real Estate</span>
     <h1>More than a transaction — a real experience.</h1>

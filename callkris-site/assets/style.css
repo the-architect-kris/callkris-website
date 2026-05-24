@@ -276,13 +276,33 @@ body.nav-open .nav__toggle span::after  { transform: translateY(-6px) rotate(-45
   color: #fff;
   overflow: hidden;
 }
-.hero__bg {
+.hero__bg,
+.hero__bg-wrap {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
+}
+.hero__bg {
   object-fit: cover;
   opacity: 0.32;
 }
+.hero__bg-wrap { display: block; pointer-events: none; }
+.hero__bg-wrap .hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .hero__bg--vancouver { object-position: center 18%; }
+@media (min-width: 980px) {
+  .hero:has(.hero__bg--vancouver) { min-height: clamp(500px, 36vw, 640px); }
+  .hero:has(.hero__bg--vancouver) .hero__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: inherit;
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+  .hero__bg--vancouver { object-position: center 22%; }
+}
+@media (min-width: 1400px) {
+  .hero__bg--vancouver { object-position: center top; }
+}
 .hero::after {
   content: "";
   position: absolute; inset: 0;
